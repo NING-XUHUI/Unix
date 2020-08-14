@@ -1,6 +1,7 @@
 #include <apue.h>
 #include <sys/wait.h>
 
+
 int main(void)
 {
     char buf[MAXLINE]; /* 来自apue.h */
@@ -8,12 +9,15 @@ int main(void)
     int status;
 
     printf("%% ");     /* */
-    while(fgets(buf,MAXLINE,stdin) != NULL){
+    while(fgets(buf, MAXLINE,stdin) != NULL){
         if(buf[strlen(buf)-1] == '\n')
-            buf[strlen(buf) - 1] = 0;   /* 将新行替换为null */
+            buf[strlen(buf) - 1] = 0;   /* 将尾部的\0替换为null，因为execlp执行命令时以null为结束符  */
         if((pid = fork()) < 0){
             err_sys("fork error");
-        }else if(pid == 0){
+        }
+
+
+        else if(pid == 0){
             execlp(buf,buf,(char *)0);
             err_ret("couldn't execute: %s",buf);
             exit(127);
